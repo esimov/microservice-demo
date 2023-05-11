@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -48,14 +47,12 @@ func Login(db *gorm.DB, c *config.Config, ctx *gin.Context) {
 	}
 	user := models.User{}
 	err = json.Unmarshal(body, &user)
-	fmt.Println("============================")
-	fmt.Println("Body:", body)
 	if err != nil {
 		Error(ctx.Writer, http.StatusUnprocessableEntity, err)
 		return
 	}
 
-	token, err := SignIn(db, c, &user)
+	token, err := SignIn(db, c, user.Email, user.Password)
 	if err != nil {
 		Error(ctx.Writer, http.StatusUnprocessableEntity, err)
 		return
@@ -63,13 +60,15 @@ func Login(db *gorm.DB, c *config.Config, ctx *gin.Context) {
 	Response(ctx.Writer, http.StatusOK, token)
 }
 
-func SignIn(db *gorm.DB, c *config.Config, user *models.User) (string, error) {
+func SignIn(db *gorm.DB, c *config.Config, email, password string) (string, error) {
 	var err error
-	err = user.FindByEmail(db, user.Email)
+	user := models.User{}
+
+	err = user.FindByEmail(db, email)
 	if err != nil {
 		return "", err
 	}
-	err = user.VerifyPassword(user.Password, user.Password)
+	err = user.VerifyPassword(password, user.Password)
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
 		return "", err
 	}
