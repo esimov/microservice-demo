@@ -8,11 +8,12 @@ import (
 )
 
 type Config struct {
-	UserName string `mapstructure:"MYSQL_USERNAME"`
-	Password string `mapstructure:"MYSQL_PASSWORD"`
-	HostName string `mapstructure:"MYSQL_HOSTNAME"`
-	Port     string `mapstructure:"MYSQL_PORT"`
-	DB       string `mapstructure:"MYSQL_DATABASE"`
+	ApiSecret string `mapstructure:"API_SECRET"`
+	UserName  string `mapstructure:"MYSQL_USERNAME"`
+	Password  string `mapstructure:"MYSQL_PASSWORD"`
+	HostName  string `mapstructure:"MYSQL_HOSTNAME"`
+	Port      string `mapstructure:"MYSQL_PORT"`
+	DB        string `mapstructure:"MYSQL_DATABASE"`
 }
 
 // Load config file from given path
