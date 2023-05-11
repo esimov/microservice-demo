@@ -18,8 +18,8 @@ func main() {
 		c.String(http.StatusOK, "Hello World")
 	})
 
-	r.Run()
 	Start()
+	r.Run()
 }
 
 func Start() {

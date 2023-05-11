@@ -17,14 +17,14 @@ import (
 
 type Company struct {
 	gorm.Model
-	ID          string    `gorm:"type:uuid;primaryKey"`
-	Name        string    `gorm:"size:15;unique;not null"`
-	Description string    `gorm:"size:3000"`
-	Employees   int       `gorm:"not null"`
-	Registered  bool      `gorm:"not null"`
-	Type        OrgType   `gorm:"type:varchar(20);not null"`
-	CreatedAt   time.Time `gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt   time.Time `gorm:"default:CURRENT_TIMESTAMP"`
+	ID          string  `gorm:"primaryKey"`
+	Name        string  `gorm:"size:15;unique;not null"`
+	Description string  `gorm:"size:3000"`
+	Employees   int     `gorm:"not null"`
+	Registered  bool    `gorm:"not null"`
+	Type        OrgType `gorm:"type:varchar(20);not null"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 type OrgType string
@@ -38,7 +38,7 @@ const (
 
 func Load(db *gorm.DB) error {
 	//AutoMigrate will create the table if it doesn't exist already
-	err := db.Debug().AutoMigrate(&Company{}).Error
+	err := db.Debug().AutoMigrate(&Company{})
 	if err != nil {
 		return errors.New(fmt.Sprintf("cannot migrate table: %v", err))
 	}
