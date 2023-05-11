@@ -49,6 +49,11 @@ func (s *Server) InitRoutes(config *config.Config) {
 		fmt.Println(s.DB, ctx.Request, ctx.Writer)
 		controller.Login(s.DB, config, ctx)
 	})
+	s.Engine.POST("/users", func(ctx *gin.Context) {
+		ctx.Header("Content-Type", "application/json")
+		fmt.Println(s.DB, ctx.Request, ctx.Writer)
+		controller.CreateUser(s.DB, config, ctx)
+	})
 	s.Engine.GET("/company:id", func(c *gin.Context) {
 		c.String(http.StatusOK, "Hello World")
 	})

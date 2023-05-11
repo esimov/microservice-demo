@@ -14,6 +14,32 @@ import (
 	"gorm.io/gorm"
 )
 
+func CreateUser(db *gorm.DB, c *config.Config, ctx *gin.Context) {
+	body, err := ioutil.ReadAll(ctx.Request.Body)
+	if err != nil {
+		Error(ctx.Writer, http.StatusUnprocessableEntity, err)
+		return
+	}
+	user := models.User{}
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		Error(ctx.Writer, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	err = user.BeforeSave()
+	if err != nil {
+		Error(ctx.Writer, http.StatusUnprocessableEntity, err)
+		return
+	}
+	err = user.Save(db)
+	if err != nil {
+		Error(ctx.Writer, http.StatusUnprocessableEntity, err)
+		return
+	}
+	Response(ctx.Writer, http.StatusOK, user)
+}
+
 func Login(db *gorm.DB, c *config.Config, ctx *gin.Context) {
 	body, err := ioutil.ReadAll(ctx.Request.Body)
 	if err != nil {
