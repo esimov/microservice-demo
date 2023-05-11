@@ -1,17 +1,18 @@
 package config
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+
+	"github.com/spf13/viper"
+)
 
 type Config struct {
-	MySQL
-}
-
-type MySQL struct {
-	UserName string
-	Password string
-	HostName string
-	Port     string
-	DB       string
+	UserName string `mapstructure:"MYSQL_USERNAME"`
+	Password string `mapstructure:"MYSQL_PASSWORD"`
+	HostName string `mapstructure:"MYSQL_HOSTNAME"`
+	Port     string `mapstructure:"MYSQL_PORT"`
+	DB       string `mapstructure:"MYSQL_DATABASE"`
 }
 
 // Load config file from given path
@@ -20,6 +21,7 @@ func LoadConfig(filename string) (*viper.Viper, error) {
 
 	v.SetConfigName(filename)
 	v.AddConfigPath(".")
+	v.SetConfigType("env")
 	v.AutomaticEnv()
 	if err := v.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
@@ -33,9 +35,10 @@ func LoadConfig(filename string) (*viper.Viper, error) {
 
 // Parse config file
 func ParseConfig(v *viper.Viper) (*Config, error) {
-	c := &Config{}
+	c := new(Config)
 
 	err := v.Unmarshal(c)
+	fmt.Println(c)
 	if err != nil {
 		return nil, err
 	}

@@ -3,6 +3,7 @@ services:
   db:
     image: mysql:latest
     restart: always
+    command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -24,16 +25,31 @@ services:
       DB_USER: ${MYSQL_USERNAME}
       DB_PASSWORD: ${MYSQL_PASSWORD}
       DB_NAME: ${MYSQL_DATABASE}
+    volumes:
+      - .:/app/build
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin
     restart: always
+    links:
+      - db
     ports:
       - 8081:80
     environment:
       PMA_HOST: ${MYSQL_HOSTNAME}
       PMA_PORT: ${MYSQL_PORT}
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      mysql-phpmyadmin:
+        aliases:
+          - phpmyadmin
 
 volumes:
   db_data:
+
+
+networks:
+  mysql-phpmyadmin:
+    name: mysql-phpmyadmin
+    # use the bridge driver
+    driver: bridge
