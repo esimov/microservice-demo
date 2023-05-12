@@ -1,4 +1,4 @@
-# XM Golang Exercise - v22.0.0
+# Microservice Demo Project
 
 ## Project setup
 In order to install the application you need Docker and Docker Compose, so please make sure that these are installed on your computer.
