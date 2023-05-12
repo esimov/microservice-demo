@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -16,7 +17,7 @@ import (
 
 type Company struct {
 	gorm.Model
-	ID          string    `gorm:"primaryKey" json:"id"`
+	ID          uint32    `gorm:"primaryKey;auto_increment" json:"id"`
 	Name        string    `gorm:"size:15;unique;not null" json:"name"`
 	Description string    `gorm:"size:3000" json:"description"`
 	Employees   int       `gorm:"not null" json:"employees"`
@@ -53,18 +54,33 @@ func (c *Company) Save(db *gorm.DB) error {
 	return nil
 }
 
-func (c *Company) FindById(db *gorm.DB, pid uint64) error {
+func (c *Company) FindAll(db *gorm.DB) (*[]Company, error) {
 	var err error
-	err = db.Debug().Model(&Company{}).Where("id = ?", pid).Take(&c).Error
+
+	companies := []Company{}
+	err = db.Debug().Model(&Company{}).Limit(100).Find(&companies).Error
 	if err != nil {
-		return err
+		return &[]Company{}, err
 	}
-	return nil
+	return &companies, err
 }
 
-func (c *Company) Update(db *gorm.DB) error {
+func (c *Company) FindById(db *gorm.DB, cid uint64) (*Company, error) {
 	var err error
-	err = db.Debug().Model(&Company{}).Where("id = ?", c.ID).Updates(
+	err = db.Debug().Model(&Company{}).Where("id = ?", cid).Take(&c).Error
+	if err != nil {
+		return nil, err
+	}
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, errors.New("Company Not Found")
+	}
+
+	return c, nil
+}
+
+func (c *Company) Update(db *gorm.DB, cid uint64) error {
+	var err error
+	err = db.Debug().Model(&Company{}).Where("id = ?", cid).Updates(
 		Company{
 			Name:        c.Name,
 			Description: c.Description,
@@ -77,4 +93,12 @@ func (c *Company) Update(db *gorm.DB) error {
 		return err
 	}
 	return nil
+}
+
+func (c *Company) Delete(db *gorm.DB, cid uint64) (int64, error) {
+	db = db.Debug().Model(&Company{}).Where("id = ?", cid).Take(&Company{}).Delete(&Company{})
+	if db.Error != nil {
+		return 0, db.Error
+	}
+	return db.RowsAffected, nil
 }

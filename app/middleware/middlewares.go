@@ -1,4 +1,4 @@
-package middlewares
+package middleware
 
 import (
 	"net/http"
@@ -8,11 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func JwtAuthMiddleware(config *config.Config) gin.HandlerFunc {
+func JwtAuth(config *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := auth.ValidateToken(config, c.Request)
 		if err != nil {
-			c.String(http.StatusUnauthorized, "Unauthorized")
+			c.String(http.StatusUnauthorized, err.Error())
 			c.Abort()
 			return
 		}

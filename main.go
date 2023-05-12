@@ -17,7 +17,7 @@ func main() {
 	fmt.Println("Config:", config)
 
 	server := &app.Server{
-		Engine: gin.New(),
+		Route: gin.New(),
 	}
 
 	err = server.Init(config)

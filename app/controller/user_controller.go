@@ -85,7 +85,7 @@ func UpdateUser(db *gorm.DB, c *config.Config, ctx *gin.Context) {
 		response.Error(ctx.Writer, http.StatusUnprocessableEntity, err)
 		return
 	}
-	err = user.Update(db)
+	err = user.Update(db, uid)
 	if err != nil {
 		response.Error(ctx.Writer, http.StatusUnprocessableEntity, err)
 		return

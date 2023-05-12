@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -62,13 +63,16 @@ func (u *User) FindAll(db *gorm.DB) (*[]User, error) {
 	return &users, err
 }
 
-func (u *User) FindById(db *gorm.DB, pid uint64) error {
+func (u *User) FindById(db *gorm.DB, uid uint64) (*User, error) {
 	var err error
-	err = db.Debug().Model(&User{}).Where("id = ?", pid).Take(&u).Error
+	err = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&u).Error
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, errors.New("User Not Found")
+	}
+	return u, nil
 }
 
 func (u *User) FindByEmail(db *gorm.DB, email string) error {
@@ -80,9 +84,9 @@ func (u *User) FindByEmail(db *gorm.DB, email string) error {
 	return nil
 }
 
-func (u *User) Update(db *gorm.DB) error {
+func (u *User) Update(db *gorm.DB, uid uint64) error {
 	var err error
-	err = db.Debug().Model(&User{}).Where("id = ?", u.ID).Updates(
+	err = db.Debug().Model(&User{}).Where("id = ?", uid).Updates(
 		User{
 			Email:     u.Email,
 			Password:  u.Password,
@@ -94,8 +98,8 @@ func (u *User) Update(db *gorm.DB) error {
 	return nil
 }
 
-func (u *User) Delete(db *gorm.DB, uid uint32) (int64, error) {
-	db = db.Debug().Model(&User{}).Where("id = ?", u.ID).Take(&User{}).Delete(&User{})
+func (u *User) Delete(db *gorm.DB, uid uint64) (int64, error) {
+	db = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&User{}).Delete(&User{})
 	if db.Error != nil {
 		return 0, db.Error
 	}
