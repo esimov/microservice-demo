@@ -1,6 +1,7 @@
 package app
 
 import (
+	"io/ioutil"
 	"net/http"
 
 	"github.com/esimov/xm/app/controller"
@@ -36,6 +37,13 @@ func (s *Server) InitRoutes(config *config.Config) error {
 	company.POST("/create", func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")
 		controller.CreateCompany(s.DB, config, c)
+		body, _ := ioutil.ReadAll(c.Request.Body)
+		// Kafka event test
+		{
+			s.Send("company", body)
+			s.Receive("company")
+		}
+
 	})
 	company.PATCH("/:id", func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")

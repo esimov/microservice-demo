@@ -50,9 +50,8 @@ services:
       ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_CLIENT_PORT}
       ZOOKEEPER_TICK_TIME: ${ZOOKEEPER_TICK_TIME}
 
-  broker:
+  kafkahost1:
     image: confluentinc/cp-kafka:latest
-    container_name: broker
     ports:
       - "9092:9092"
     depends_on:

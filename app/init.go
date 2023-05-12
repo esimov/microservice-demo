@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/Shopify/sarama"
 	"github.com/esimov/xm/app/models"
 	"github.com/esimov/xm/config"
 	"github.com/gin-gonic/gin"
@@ -12,8 +13,10 @@ import (
 )
 
 type Server struct {
-	DB    *gorm.DB
-	Route *gin.Engine
+	DB       *gorm.DB
+	Route    *gin.Engine
+	Producer sarama.SyncProducer
+	Consumer sarama.Consumer
 }
 
 func (s *Server) Init(c *config.Config) error {
@@ -37,4 +40,35 @@ func (s *Server) Init(c *config.Config) error {
 	}
 
 	return nil
+}
+
+func (s *Server) Send(topic string, message []byte) error {
+	msg := &sarama.ProducerMessage{
+		Topic: topic,
+		Value: sarama.StringEncoder(message),
+	}
+	partition, offset, err := s.Producer.SendMessage(msg)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Message is stored in topic(%s)/partition(%d)/offset(%d)\n", topic, partition, offset)
+	return nil
+}
+
+func (s *Server) Receive(topic string) {
+	partitionList, err := s.Consumer.Partitions(topic) //get all partitions on the given topic
+	if err != nil {
+		fmt.Println("Error retrieving partitionList ", err)
+	}
+	initialOffset := sarama.OffsetOldest //get offset for the oldest message on the topic
+
+	for _, partition := range partitionList {
+		pc, _ := s.Consumer.ConsumePartition(topic, partition, initialOffset)
+
+		go func(pc sarama.PartitionConsumer) {
+			for message := range pc.Messages() {
+				fmt.Println(string(message.Value))
+			}
+		}(pc)
+	}
 }
