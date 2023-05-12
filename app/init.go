@@ -31,7 +31,10 @@ func (s *Server) Init(c *config.Config) error {
 		log.Fatalf("Server error, %v", err)
 	}
 
-	s.InitRoutes(c)
+	err = s.InitRoutes(c)
+	if err != nil {
+		log.Fatalf("Kafka error, %v", err)
+	}
 
 	return nil
 }

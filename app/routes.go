@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *Server) InitRoutes(config *config.Config) {
+func (s *Server) InitRoutes(config *config.Config) error {
 	s.Route.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "Welcome to our platform.")
 	})
@@ -51,4 +51,6 @@ func (s *Server) InitRoutes(config *config.Config) {
 	})
 
 	s.Route.Run()
+
+	return nil
 }
