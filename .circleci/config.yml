@@ -1,0 +1,31 @@
+version: 2 # use CircleCI 2.0
+jobs: # basic units of work in a run
+  build: # runs not using Workflows must have a `build` job as entry point
+    docker: # run the steps with Docker
+      - image: circleci/golang:1.20
+      - image: cimg/mysql:8.0
+        environment: # environment variables for primary container
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ROOT_PASSWORD: ''
+
+    environment: # environment variables for the build itself
+      GO111MODULE: "on" #we don't rely on GOPATH
+
+    working_directory: ~/usr/src/app
+
+    steps: # steps that comprise the `build` job
+      - checkout # check out source code to working directory
+      - run:
+          name: "Fetch dependencies"
+          command: go mod download
+      
+      - run:
+          name: Wait for Database Connection
+          # preinstalled in circleci/* docker image
+          command: dockerize -wait tcp://localhost:3306 -timeout 1m      
+
+workflows:
+  version: 2
+  build-workflow:
+    jobs:
+      - build
