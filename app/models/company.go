@@ -96,7 +96,7 @@ func (c *Company) Update(db *gorm.DB, cid uint64) error {
 }
 
 func (c *Company) Delete(db *gorm.DB, cid uint64) (int64, error) {
-	db = db.Debug().Model(&Company{}).Where("id = ?", cid).Take(&Company{}).Delete(&Company{})
+	db = db.Debug().Model(&Company{}).Unscoped().Where("id = ?", cid).Take(&Company{}).Delete(&Company{})
 	if db.Error != nil {
 		return 0, db.Error
 	}

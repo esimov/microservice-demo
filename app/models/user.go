@@ -99,7 +99,7 @@ func (u *User) Update(db *gorm.DB, uid uint64) error {
 }
 
 func (u *User) Delete(db *gorm.DB, uid uint64) (int64, error) {
-	db = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&User{}).Delete(&User{})
+	db = db.Debug().Model(&User{}).Unscoped().Where("id = ?", uid).Take(&User{}).Delete(&User{})
 	if db.Error != nil {
 		return 0, db.Error
 	}

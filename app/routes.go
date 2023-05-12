@@ -10,12 +10,10 @@ import (
 )
 
 func (s *Server) InitRoutes(config *config.Config) {
-	// Home Route
 	s.Route.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello World")
+		c.String(http.StatusOK, "Welcome to our platform.")
 	})
 
-	//s.Engine.Use(middlewares.JwtAuthMiddleware(c))
 	s.Route.POST("/login", func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")
 		//ctx.JSON(code, obj)

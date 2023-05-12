@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/esimov/xm/auth"
@@ -12,7 +13,7 @@ func JwtAuth(config *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := auth.ValidateToken(config, c.Request)
 		if err != nil {
-			c.String(http.StatusUnauthorized, err.Error())
+			c.String(http.StatusUnauthorized, fmt.Sprintf("authorization error: %s", err.Error()))
 			c.Abort()
 			return
 		}
