@@ -46,13 +46,19 @@ func (s *Server) InitRoutes(config *config.Config) {
 	s.Engine.POST("/login", func(ctx *gin.Context) {
 		ctx.Header("Content-Type", "application/json")
 		//ctx.JSON(code, obj)
-		fmt.Println(s.DB, ctx.Request, ctx.Writer)
 		controller.Login(s.DB, config, ctx)
 	})
-	s.Engine.POST("/users", func(ctx *gin.Context) {
+	s.Engine.GET("/users", func(ctx *gin.Context) {
 		ctx.Header("Content-Type", "application/json")
-		fmt.Println(s.DB, ctx.Request, ctx.Writer)
+		controller.GetUsers(s.DB, config, ctx)
+	})
+	s.Engine.POST("/users/add", func(ctx *gin.Context) {
+		ctx.Header("Content-Type", "application/json")
 		controller.CreateUser(s.DB, config, ctx)
+	})
+	s.Engine.PATCH("/users/:id", func(ctx *gin.Context) {
+		ctx.Header("Content-Type", "application/json")
+		controller.UpdateUser(s.DB, config, ctx)
 	})
 	s.Engine.GET("/company:id", func(c *gin.Context) {
 		c.String(http.StatusOK, "Hello World")

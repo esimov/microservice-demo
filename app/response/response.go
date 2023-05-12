@@ -1,4 +1,4 @@
-package controller
+package response
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func Response(w http.ResponseWriter, statusCode int, msg any) {
+func Status(w http.ResponseWriter, statusCode int, msg any) {
 	w.WriteHeader(statusCode)
 	err := json.NewEncoder(w).Encode(msg)
 	if err != nil {
@@ -16,12 +16,12 @@ func Response(w http.ResponseWriter, statusCode int, msg any) {
 
 func Error(w http.ResponseWriter, statusCode int, err error) {
 	if err != nil {
-		Response(w, statusCode, struct {
+		Status(w, statusCode, struct {
 			Error string `json:"error"`
 		}{
 			Error: err.Error(),
 		})
 		return
 	}
-	Response(w, http.StatusBadRequest, nil)
+	Status(w, http.StatusBadRequest, nil)
 }

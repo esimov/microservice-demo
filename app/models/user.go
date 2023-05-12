@@ -51,6 +51,17 @@ func (u *User) Save(db *gorm.DB) error {
 	return nil
 }
 
+func (u *User) FindAll(db *gorm.DB) (*[]User, error) {
+	var err error
+
+	users := []User{}
+	err = db.Debug().Model(&User{}).Limit(100).Find(&users).Error
+	if err != nil {
+		return &[]User{}, err
+	}
+	return &users, err
+}
+
 func (u *User) FindById(db *gorm.DB, pid uint64) error {
 	var err error
 	err = db.Debug().Model(&User{}).Where("id = ?", pid).Take(&u).Error
