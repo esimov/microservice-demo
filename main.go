@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/esimov/xm/app"
@@ -14,7 +13,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error getting the environment variables, %v", err)
 	}
-	fmt.Println("Config:", config)
 
 	server := &app.Server{
 		Route: gin.New(),

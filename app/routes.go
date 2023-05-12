@@ -16,7 +16,6 @@ func (s *Server) InitRoutes(config *config.Config) {
 
 	s.Route.POST("/login", func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")
-		//ctx.JSON(code, obj)
 		controller.Login(s.DB, config, c)
 	})
 	s.Route.GET("/users", func(c *gin.Context) {

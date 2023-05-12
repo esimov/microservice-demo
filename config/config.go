@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/spf13/viper"
 )
@@ -39,7 +38,6 @@ func ParseConfig(v *viper.Viper) (*Config, error) {
 	c := new(Config)
 
 	err := v.Unmarshal(c)
-	fmt.Println(c)
 	if err != nil {
 		return nil, err
 	}
