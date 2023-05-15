@@ -7,14 +7,15 @@ In order to install the application you need Docker and Docker Compose, so pleas
 ```bash
 $ docker-compose up --build
 ```
-This will install the following microservices (containers): MySQL, the Go application and PMA (phpmyadmin) for DB management.
+This will install the following microservices (containers): MySQL, Kafka, the Go application, and PMA (phpmyadmin) for DB management.
 
 ### How to test it?
 If the installation went successfully you could access the application under the following link: `127.0.0.1:8080`. The PMA is accessible on `127.0.0.1:8081`.
 
-This is an API/JSON based application, so it does not have any kind of visual parts. This means that you have to use Postman or CURL for example to test the API endpoints. 
+This is an API/JSON based application, so it doesn't have a visual interface. This means that you have to use Postman or CURL for example to test the API endpoints. 
 
 ### Endpoints:
+#### Users
 
 ```go
     POST - /users/add // create a user
@@ -35,10 +36,13 @@ I could have hardcoded a user without exposing an API endpoint, but this approac
 ```go
     POST - /login // login a user
 ```
-This will return a JWT token like the following: `"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2ODM4NzI1MjgsInVzZXJfaWQiOjF9.JkmBMnw7G2EbFgGs80dHy0Gdv7WKpREQmSwddJ-c3Dk"`.
+This will return a JWT token like the following: 
+
+`"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2ODM4NzI1MjgsInVzZXJfaWQiOjF9.JkmBMnw7G2EbFgGs80dHy0Gdv7WKpREQmSwddJ-c3Dk"`.
 
 For the upcoming operations we need to use this token as a Bearer Token in order to access the API endpoints. If you use Postman you have to put it in the `Authorization` section.
 
+#### Companies
 ```go
     POST - /company/create
     GET - /company/:id
@@ -56,4 +60,6 @@ Body:
     "type": "NonProfit"
 }
 ```
+
+The Kafka events producers are integrated into the Company creation API section. On each company creation operation a Kafka event is produced.
 
