@@ -10,6 +10,7 @@ import (
 	"github.com/esimov/xm/auth"
 	"github.com/esimov/xm/config"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -42,8 +43,8 @@ func SignIn(db *gorm.DB, c *config.Config, email, password string) (string, erro
 	if err != nil {
 		return "", err
 	}
-	err = user.VerifyPassword(password, user.Password)
-	if err != nil {
+	err = user.VerifyPassword(user.Password, password)
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
 		return "", err
 	}
 	return auth.CreateToken(c, user.ID)
