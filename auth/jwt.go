@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/esimov/xm/config"
+	"github.com/esimov/microservice-demo/config"
 	"github.com/golang-jwt/jwt"
 )
 

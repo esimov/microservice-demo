@@ -4,9 +4,9 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/esimov/xm/app/controller"
-	"github.com/esimov/xm/app/middleware"
-	"github.com/esimov/xm/config"
+	"github.com/esimov/microservice-demo/app/controller"
+	"github.com/esimov/microservice-demo/app/middleware"
+	"github.com/esimov/microservice-demo/config"
 	"github.com/gin-gonic/gin"
 )
 

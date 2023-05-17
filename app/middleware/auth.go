@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/esimov/xm/auth"
-	"github.com/esimov/xm/config"
+	"github.com/esimov/microservice-demo/auth"
+	"github.com/esimov/microservice-demo/config"
 	"github.com/gin-gonic/gin"
 )
 

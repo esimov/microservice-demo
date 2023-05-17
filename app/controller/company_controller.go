@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/esimov/xm/app/models"
-	"github.com/esimov/xm/app/response"
-	"github.com/esimov/xm/config"
+	"github.com/esimov/microservice-demo/app/models"
+	"github.com/esimov/microservice-demo/app/response"
+	"github.com/esimov/microservice-demo/config"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )

@@ -6,7 +6,7 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - db
+      - mysql
     environment:
       DB_PORT: ${MYSQL_PORT}
       DB_USER: ${MYSQL_USERNAME}
@@ -17,7 +17,7 @@ services:
     volumes:
       - .:/app/build
 
-  db:
+  mysql:
     image: mysql:latest
     restart: unless-stopped
     command: --default-authentication-plugin=mysql_native_password
@@ -35,7 +35,7 @@ services:
     image: phpmyadmin/phpmyadmin
     restart: unless-stopped
     links:
-      - db
+      - mysql
     ports:
       - 8081:80
     environment:

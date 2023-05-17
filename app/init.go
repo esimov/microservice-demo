@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/Shopify/sarama"
-	"github.com/esimov/xm/app/models"
-	"github.com/esimov/xm/config"
+	"github.com/esimov/microservice-demo/app/models"
+	"github.com/esimov/microservice-demo/config"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

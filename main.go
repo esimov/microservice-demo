@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/esimov/xm/app"
-	"github.com/esimov/xm/config"
-	"github.com/esimov/xm/kafka"
+	"github.com/esimov/microservice-demo/app"
+	"github.com/esimov/microservice-demo/config"
+	"github.com/esimov/microservice-demo/kafka"
 	"github.com/gin-gonic/gin"
 )
 
